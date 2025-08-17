@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: backend-config
+  namespace: monitoring-app
+data:
+  NODE_ENV: "production"
+
+
