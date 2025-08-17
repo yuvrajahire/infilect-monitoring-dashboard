@@ -21,7 +21,7 @@ app.get('/metrics', (req, res) => {
 });
 
 // ✅ Important: bind to 0.0.0.0 instead of localhost
-app.listen(PORT, "0.0.0.0", () => {
+app.listen(PORT, '0.0.0.0', () => {
   console.log(`Backend running on http://0.0.0.0:${PORT}`);
 });
 
