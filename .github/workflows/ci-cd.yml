@@ -11,93 +11,81 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    # 1. Checkout code
-    - name: Checkout code
-      uses: actions/checkout@v3
+      # 1. Checkout code
+      - name: Checkout code
+        uses: actions/checkout@v3
 
-    # 2. Set up Node.js for frontend/backend
-    - name: Setup Node.js
-      uses: actions/setup-node@v3
-      with:
-        node-version: '18'
+      # 2. Set up Node.js
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
 
-    # 3. Install backend dependencies
-    - name: Install backend dependencies
-      run: |
-        cd backend
-        npm install
+      # 3. Install backend dependencies
+      - name: Install backend dependencies
+        run: |
+          cd backend
+          npm install
 
-    # 4. Run backend tests
-    - name: Run backend tests
-      run: |
-        cd backend
-        npm test || echo "No tests found"
+      # 4. Run backend tests
+      - name: Run backend tests
+        run: |
+          cd backend
+          npm test
 
-    # 5. Lint backend code
-    - name: Lint backend code
-      run: |
-        cd backend
-        npm run lint || echo "Lint passed with fixes"
+      # 5. Lint backend code
+      - name: Lint backend code
+        run: |
+          cd backend
+          npm run lint
 
-    # 6. Install frontend dependencies (if folder exists)
-    - name: Install frontend dependencies
-      if: ${{ github.workspace && steps.checkout.outputs.repository != '' && (hashFiles('frontend/package.json') != '') }}
-      run: |
-        cd frontend
-        npm install
+      # 6. Install frontend dependencies
+      - name: Install frontend dependencies
+        run: |
+          cd frontend
+          npm install
 
-    # 7. Lint frontend code (if folder exists)
-    - name: Lint frontend code
-      if: ${{ github.workspace && steps.checkout.outputs.repository != '' && (hashFiles('frontend/package.json') != '') }}
-      run: |
-        cd frontend
-        npm run lint || echo "Frontend lint passed with fixes"
+      # 7. Lint frontend code
+      - name: Lint frontend code
+        run: |
+          cd frontend
+          npm run lint
 
-    # 8. Build Docker images
-    - name: Build Docker images
-      run: |
-        docker build -t ${{ secrets.DOCKER_USERNAME }}/backend:latest ./backend
-        if [ -f frontend/package.json ]; then
+      # 8. Build Docker images
+      - name: Build Docker images
+        run: |
+          docker build -t ${{ secrets.DOCKER_USERNAME }}/backend:latest ./backend
           docker build -t ${{ secrets.DOCKER_USERNAME }}/frontend:latest ./frontend
-        fi
 
-    # 9. Login to Docker Hub
-    - name: Login to Docker Hub
-      uses: docker/login-action@v2
-      with:
-        username: ${{ secrets.DOCKER_USERNAME }}
-        password: ${{ secrets.DOCKER_PASSWORD }}
+      # 9. Login to Docker Hub
+      - name: Login to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
 
-    # 10. Push Docker images
-    - name: Push Docker images
-      run: |
-        docker push ${{ secrets.DOCKER_USERNAME }}/backend:latest
-        if [ -f frontend/package.json ]; then
+      # 10. Push Docker images
+      - name: Push Docker images
+        run: |
+          docker push ${{ secrets.DOCKER_USERNAME }}/backend:latest
           docker push ${{ secrets.DOCKER_USERNAME }}/frontend:latest
-        fi
 
-    # 11. Configure AWS credentials
-- name: Configure AWS credentials
-  uses: aws-actions/configure-aws-credentials@v2
-  with:
-    aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-    aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-    aws-region: us-east-1  # or use ${{ secrets.AWS_REGION }}
+      # 11. Configure AWS credentials
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
 
-# 12. Update kubeconfig for EKS
-- name: Update kubeconfig
-  run: |
-    aws eks update-kubeconfig --region us-east-1 --name infilect-cluster
+      # 12. Update kubeconfig
+      - name: Update kubeconfig
+        run: |
+          aws eks update-kubeconfig --region ${{ secrets.AWS_REGION }} --name infilect-cluster
 
-# 13. Ensure namespace exists
-- name: Create namespace if not exists
-  run: |
-    kubectl get namespace monitoring-app || kubectl create namespace monitoring-app
-
-# 14. Deploy backend and frontend
-- name: Deploy to Kubernetes
-  run: |
-    kubectl apply -f k8s/backend-deployment.yaml -n monitoring-app
-    kubectl apply -f k8s/frontend-deployment.yaml -n monitoring-app
-
+      # 13. Apply Kubernetes manifests
+      - name: Deploy to Kubernetes
+        run: |
+          kubectl apply -f k8s/backend-deployment.yaml
+          kubectl apply -f k8s/frontend-deployment.yaml
 
