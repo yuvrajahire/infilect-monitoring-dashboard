@@ -57,12 +57,6 @@ The Infilect Monitoring Dashboard is a full-stack monitoring application with a 
 git clone https://github.com/yuvrajahire/infilect-monitoring-dashboard.git
 cd infilect-monitoring-dashboard
 
-# Frontend
-docker build -t yuvrajahire/frontend:latest -f frontend/Dockerfile .
-
-# Backend
-docker build -t yuvrajahire/backend:latest -f backend/Dockerfile .
-
 2. Build Docker Images
 # Frontend
 docker build -t yuvrajahire/frontend:latest -f frontend/Dockerfile .
@@ -108,6 +102,7 @@ To allow external access to the app:
 Frontend: TCP port 3000 → Source: 0.0.0.0/0
 
 Backend Metrics: TCP port 5000 → Source: 0.0.0.0/0
+
 
 
 
