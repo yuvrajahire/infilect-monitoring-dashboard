@@ -1,6 +1,6 @@
 # infilect-monitoring-dashboard
-yuvrajahire
-infilect-monitoring-dashboard
-monitoring-app
-yuvrajahire/backend (or frontend)
-latest
+<ORG> → yuvrajahire
+<REPO> → infilect-monitoring-dashboard
+<namespace> → monitoring-app
+<registry>/<repo> → yuvrajahire/backend (or yuvrajahire/frontend)
+<tag> → latest
