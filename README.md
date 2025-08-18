@@ -16,6 +16,21 @@
  (updated)
 
 
+## Table of Contents
+1. [Project Overview](#project-overview)
+2. [System Architecture](#system-architecture)
+3. [Tech Stack & Reasoning](#tech-stack--reasoning)
+4. [Local Deployment Guide](#local-deployment-guide)
+   - [1. Clone the Repository](#1-clone-the-repository)
+   - [2. Build Docker Images](#2-build-docker-images)
+   - [3. Push Docker Images to Docker Hub](#3-push-docker-images-to-docker-hub)
+   - [4. Run with Docker Compose](#4-run-with-docker-compose)
+5. [Frontend & Backend Access (Local / EC2)](#frontend--backend-access-local--ec2)
+6. [Deploy on Kubernetes](#deploy-on-kubernetes)
+7. [Documentation](#documentation)
+8. [CI/CD](#cicd)
+9. [Security Group Rules (AWS)](#security-group-rules-aws)
+
 
 ## Project Overview
 The Infilect Monitoring Dashboard is a full-stack monitoring application with a **React frontend**, **Node.js backend**, and **containerized deployment** using Docker and Kubernetes. It also includes AWS infrastructure scripts for provisioning and deployment.  
@@ -78,6 +93,11 @@ Backend API: http://98.82.175.141:5000/metrics
 
 5. Deploy on Kubernetes
 kubectl apply -f k8s/
+
+Documentation
+
+project documentation is available in the docs/ folder:
+architecture-diagram.png – System architecture overview
 
 CI/CD
 
